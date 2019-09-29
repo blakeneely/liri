@@ -22,6 +22,9 @@ var getCommand = function(userDataOne, userDataTwo) {
     switch(userDataOne) {
         case "spotify-this-song" :
             getSong(userDataTwo);
+            break;
+        default:
+            console.log("LIRI doesn't seem to know that");
     }
 };
 
