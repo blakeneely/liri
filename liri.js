@@ -2,23 +2,31 @@ require("dotenv").config();
 var keys = require("./keys.js");
 var Spotify = require('node-spotify-api');
 
-var getSong = function(userData) { 
+var getArtist = function(artist) {
+    return artist.name;
+}
+var getSong = function(songName) { 
     var spotify = new Spotify(keys.spotify);
 
     spotify
-    .search({ type: 'track', query: userData })
+    .search({ type: 'track', query: songName })
     .then(function(response) {
-        // for (var i = 0; i < response.length; i++) {
-        //     console.log("Artist: " + response.tracks.items[i]);
-        // }
-        console.log(response.tracks.items[0]);
+        var songs = response.tracks.items;
+        for (var i = 0; i < songs.length; i++) {
+            console.log(i);
+            console.log("Artist: " + songs[i].artists.map(getArtist));
+            console.log("Song Name: " + songs[i].name);
+            console.log("Album: " + songs[i].album.name);
+            console.log("Preview Song: " + songs[i].preview_url);
+            console.log("------------------------------------------------------")
+        }
     })
     .catch(function(err) {
         console.log(err);
     });
 };
 
-var getCommand = function(userDataOne, userDataTwo) {
+var runLiri = function(userDataOne, userDataTwo) {
     switch(userDataOne) {
         case "spotify-this-song" :
             getSong(userDataTwo);
@@ -26,10 +34,10 @@ var getCommand = function(userDataOne, userDataTwo) {
         default:
             console.log("LIRI doesn't seem to know that");
     }
-};
+}; 
 
 var getUserData = function() {
-    getCommand(process.argv[2], process.argv[3]);
+    runLiri(process.argv[2], process.argv[3]);
 };
 
 getUserData();
