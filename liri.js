@@ -3,6 +3,15 @@ var keys = require("./keys.js");
 var Spotify = require('node-spotify-api');
 var axios = require('axios');
 var moment = require('moment');
+var fs = require('fs');
+
+var doWhatItSays = function() {
+    fs.readFile('random.txt', 'utf-8', function(err, data) {
+        if (err) throw err;
+        var dataArray = data.split(",");
+        runLiri(dataArray[0], dataArray[1]);
+    });
+};
 
 var getConcert = function() {
     var nodeArgs = process.argv;
@@ -66,8 +75,7 @@ var getArtist = function(artist) {
     return artist.name;
 }
 var getSong = function(songName) { 
-    var spotify = new Spotify(keys.spotify);
-
+var spotify = new Spotify(keys.spotify);
     spotify
     .search({ type: 'track', query: songName, limit: 1 })
     .then(function(response) {
@@ -97,6 +105,8 @@ var runLiri = function(userDataOne, userDataTwo) {
         case "concert-this" :
             getConcert();
             break;
+        case "do-what-it-says" :
+            doWhatItSays();
         default:
             console.log("LIRI doesn't seem to know that");
     }
